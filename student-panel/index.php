@@ -1,25 +1,14 @@
 <?php
-$host = "localhost";
-$username = "root";
-$password = "admin";
-$database = "db_studentportal";
 
-$con = new mysqli($host, $username, $password, $database,);
+include_once("connections/connection.php");
 
-if($con->connect_error){
-    echo $con->connect_error;
-}//connect
+$con = connection();
 
 $sql = "SELECT * FROM tbl_studentinfo";
 
 $students = $con->query($sql) or die ($con->error);//if wrong query kill the connections (students is the query)
 
-$row = $students->fetch_assoc();//fetch the associated data
-
-// do{
-// echo $row['firstname']." ".$row['lastname']. "<br/>";
-// }while($row = $students->fetch_assoc());
-
+$row = $students->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
