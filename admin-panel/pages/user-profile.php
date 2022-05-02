@@ -12,6 +12,25 @@ $user = $con->query($sql) or die ($con->error);//if wrong query kill the connect
 
 $user = $user->fetch_assoc();// for getting the admin credentials it is like a array to access data like profile simply user['profilepic']
 
+$currentId = $user['id'];
+
+if(isset($_POST['submitChanges'])){
+    $fname = $_POST['firstname'];
+    $lname = $_POST['lastname'];
+    $about = $_POST['about'];
+    $position = $_POST['position'];
+    $address = $_POST['address'];
+    $contact = $_POST['phone'];
+    $email = $_POST['email'];
+    $twitter = $_POST['twitter'];
+    $facebook = $_POST['facebook'];
+    $instagram = $_POST['instagram'];
+    $linkedin = $_POST['linkedin'];
+
+    $sqlUpdate = "UPDATE tbl_admin SET firstname = '$fname', lastname = '$lname', about = '$about', position = '$position', address = '$address', contact = '$contact', email = '$email', twitterprofile = '$twitter', facebookprofile = 'facebook', instagramprofile = '$instagram', linkedinprofile = '$linkedin' WHERE id = $currentId";
+
+    $con->query($sqlUpdate) or die ($con->error);//if wrong query kill the connections (students is the query)
+}
 
 ?>
 
@@ -371,7 +390,7 @@ $user = $user->fetch_assoc();// for getting the admin credentials it is like a a
       <h1>Profile</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="admin-dashboard.php">Home</a></li>
           <li class="breadcrumb-item">Users</li>
           <li class="breadcrumb-item active">Profile</li>
         </ol>
@@ -396,17 +415,17 @@ $user = $user->fetch_assoc();// for getting the admin credentials it is like a a
               ?>
               <div class="social-links mt-2">
     
-                <?php echo '<a href= "https://twitter.com/'.$user['twitterprofile'].'" class ="twitter"><i class="bi bi-twitter"></i></a>' 
+                <?php echo '<a href= "'.$user['twitterprofile'].'" class ="twitter"><i class="bi bi-twitter"></i></a>' 
               ?>
              
-                <?php echo '<a href= "https://facebook.com/'.$user['facebookprofile'].'" class ="facebook"><i class="bi bi-facebook"></i></a>' 
+                <?php echo '<a href= "'.$user['facebookprofile'].'" class ="facebook"><i class="bi bi-facebook"></i></a>' 
               ?>
                 
 
-                <?php echo '<a href= "https://facebook.com/'.$user['instagramprofile'].'" class ="instagram"><i class="bi bi-instagram"></i></a>' 
+                <?php echo '<a href= "'.$user['instagramprofile'].'" class ="instagram"><i class="bi bi-instagram"></i></a>' 
               ?>
                
-                <?php echo '<a href= "https://facebook.com/'.$user['linkedinprofile'].'" class ="linkedin"><i class="bi bi-linkedin"></i></a>' 
+                <?php echo '<a href= "'.$user['linkedinprofile'].'" class ="linkedin"><i class="bi bi-linkedin"></i></a>' 
               ?>
               </div>
             </div>
@@ -486,11 +505,16 @@ $user = $user->fetch_assoc();// for getting the admin credentials it is like a a
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form>
+                  <form action="" method ="post">
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
+                        
+                        <?php  echo '<img src="data:image;base64,'.base64_encode($user['profilepic']).'" alt="Profile"  />';
+               ?>
+                        <?php
+
+                        ?>
                         <div class="pt-2">
                           <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
                           <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
@@ -499,91 +523,126 @@ $user = $user->fetch_assoc();// for getting the admin credentials it is like a a
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
+                      <label for="firstName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
+                          <?php echo '<input name="firstname" type="text" class="form-control" id="firstName" value ="'.$user['firstname'].'"/>' 
+              ?>  
+                    </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                      <div class="col-md-8 col-lg-9">
+                        <?php echo '<input name = "lastname" type="text" class="form-control" id="lastName" value ="'.$user['lastname'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
                       <div class="col-md-8 col-lg-9">
-                        <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
+                    
+                        <?php echo '<textarea name="about" class="form-control" id="about" style="height: 100px">'.$user['about'].'"</textarea>' 
+              ?>
                       </div>
                     </div>
 
-                    <div class="row mb-3">
-                      <label for="company" class="col-md-4 col-lg-3 col-form-label">Company</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
-                      </div>
-                    </div>
 
                     <div class="row mb-3">
-                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>
+                      <label for="Position" class="col-md-4 col-lg-3 col-form-label">Position</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="country" type="text" class="form-control" id="Country" value="USA">
+                        <?php echo '<input name="position" type="text" class="form-control" id="Position" value ="'.$user['position'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
+                        <?php echo '<input name="address" type="text" class="form-control" id="Address" value ="'.$user['address'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
+                        <?php echo '<input name="phone" type="text" class="form-control" id="Phone" value ="'.$user['contact'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
-                      </div>
+                     <?php echo '<input name="email" type="email" class="form-control" id="Email" value ="'.$user['email'].'"/>' 
+              ?>  
+                    </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter Profile</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="twitter" type="text" class="form-control" id="Twitter" value="https://twitter.com/#">
+                            <?php echo '<input name="twitter" type="text" class="form-control" id="Twitter" value ="'.$user['twitterprofile'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook Profile</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="facebook" type="text" class="form-control" id="Facebook" value="https://facebook.com/#">
+                      
+                            <?php echo '<input name="facebook" type="text" class="form-control" id="Facebook" value ="'.$user['facebookprofile'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram Profile</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="instagram" type="text" class="form-control" id="Instagram" value="https://instagram.com/#">
+                        
+                            <?php echo '<input name="instagram" type="text" class="form-control" id="Instagram" value ="'.$user['instagramprofile'].'"/>' 
+              ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin Profile</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="linkedin" type="text" class="form-control" id="Linkedin" value="https://linkedin.com/#">
+                        
+                        <?php echo '<input name="linkedin" type="text" class="form-control" id="Linkedin" value ="'.$user['linkedinprofile'].'"/>' 
+              ?>
                       </div>
                     </div>
 
+        <!-- Modal -->
+        <div class="card">
+            <div class="card-body">
+              <!-- Basic Modal -->
+              
+              <div class="modal fade" id="basicModal" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Basic Modal</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- End Basic Modal-->
+
+            </div>
+          </div>
+
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit"  name ="submitChanges" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">Save Changes</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 
